@@ -75,8 +75,8 @@ function LoginForm() {
     // const onSubmit = (data) => {
     //     console.log(data);
     //     // 로그인 처리 로직을 여기에 작성합니다.
-    //     setAuth(data.email);
-    //     // setUsername(data.email);
+    //     setAuth(data.userEmail);
+    //     // setUsername(data.userEmail);
     //     navigate("/");
     // };
 
@@ -87,21 +87,22 @@ function LoginForm() {
                 "http://localhost:8080/api/user/login",
                 data
             );
-            console.log(response.data);
+            console.log(data);
             //로그인 성공 후의 로직을 여기에 작성한다.
-            alert(response.data.email + "님, 성공적으로 로그인 되었습니다 🔐");
+            alert(data.userEmail + "님, 성공적으로 로그인 되었습니다 🔐");
 
             // JWT 토큰 저장
             localStorage.setItem("bbs_access_token", response.data.token);
-            localStorage.setItem("id", response.data.email);
+            localStorage.setItem("id", response.data.userEmail);
 
-            setAuth(response.data.email);
+            setAuth(data.userEmail);
             navigate("/");
         } catch (error) {
             console.error(error);
+            console.log(data);
             // 에러처리 로직을 여기에 작성한다.
             alert("이메일 또는 비밀번호가 틀렸습니다.🔐");
-            reset({ email: "", password: "" }); // 이메일과 비밀번호 필드를 빈 문자열로 초기화합니다.
+            reset({ userEmail: "", password: "" }); // 이메일과 비밀번호 필드를 빈 문자열로 초기화합니다.
         }
     };
 
@@ -110,15 +111,15 @@ function LoginForm() {
             <StyledForm onSubmit={handleSubmit(onSubmit)}>
                 <Title>로그인</Title>
                 <FormField>
-                    <Label htmlFor="email">이메일</Label>
+                    <Label htmlFor="userEmail">이메일</Label>
                     <Input
-                        id="email"
-                        type="email"
-                        {...register("email", {
+                        id="userEmail"
+                        type="userEmail"
+                        {...register("userEmail", {
                             required: "이메일은 필수 입력 사항입니다.",
                         })}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                    {errors.userEmail && <p>{errors.userEmail.message}</p>}
                 </FormField>
                 <FormField>
                     <Label htmlFor="password">비밀번호</Label>
