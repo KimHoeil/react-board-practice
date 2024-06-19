@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import axios from "axios"; // axios를 임포트합니다.
+import { HttpHeadersContext } from "../context/HttpHeadersProvider";
+import { AuthContext } from "../context/AuthProvider";
 
 const Wrapper = styled.div`
     display: flex;
@@ -56,20 +58,57 @@ function PostWritePage(props) {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const { headers, setHeaders } = useContext(HttpHeadersContext);
+    const { auth, setAuth } = useContext(AuthContext);
 
     // 서버로 데이터를 전송하는 함수
     const handleSubmit = async () => {
-        try {
-            const response = await axios.post("여기에_서버_URL", {
-                title: title,
-                content: content,
+        const req = {
+            title: title,
+            content: content,
+        };
+
+        await axios
+            .post("http://localhost:8989/board/write", req, {
+                headers: headers,
+            })
+            .then((resp) => {
+                console.log("[BbsWrite.js] createBbs() success :D");
+                console.log(resp.data);
+
+                alert("새로운 게시글을 성공적으로 등록했습니다 :D");
+                navigate("/");
+            })
+            .catch((err) => {
+                console.log("[BbsWrite.js] createBbs() error :<");
+                console.log(err);
             });
-            console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
-            navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
-        } catch (error) {
-            console.error("게시글 작성이 실패했습니다.", error);
-        }
+
+        // try {
+        //     const response = await axios.post("여기에_서버_URL", {
+        //         title: title,
+        //         content: content,
+        //     });
+        //     console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
+        //     navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
+        // } catch (error) {
+        //     console.error("게시글 작성이 실패했습니다.", error);
+        //     alert("게시글 작성이 실패했습니다.");
+        // }
     };
+
+    useEffect(() => {
+        // 컴포넌트가 렌더링될 때마다 localStorage의 토큰 값으로 headers를 업데이트
+        setHeaders({
+            Authorization: `Bearer ${localStorage.getItem("bbs_access_token")}`,
+        });
+
+        // 로그인한 사용자인지 체크
+        if (!auth) {
+            alert("로그인 한 사용자만 게시글을 작성할 수 있습니다 !");
+            navigate(-1);
+        }
+    }, []);
 
     return (
         <Wrapper>

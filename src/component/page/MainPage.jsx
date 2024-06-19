@@ -1,4 +1,10 @@
-import React, { Children, createContext, useContext, useState } from "react";
+import React, {
+    Children,
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../list/PostList";
@@ -7,6 +13,7 @@ import data from "../../data.json";
 import Toolbar from "../Toolbar";
 import AuthProvider from "../context/AuthProvider";
 import { AuthContext } from "../context/AuthProvider";
+import axios from "axios";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -49,6 +56,23 @@ function MainPage(props) {
     // const { auth, username, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const { auth, setAuth } = useContext(AuthContext);
+    // const [posts, setPosts] = useState([]); // 게시글 목록 상태를 관리합니다.
+
+    // 서버로부터 게시글 목록을 불러오는 함수
+    // const fetchPosts = async () => {
+    //     try {
+    //         const response = await axios.get("여기에_서버_URL");
+    //         setPosts(response.data); // 서버로부터 받은 데이터로 상태를 업데이트합니다.
+    //     } catch (error) {
+    //         console.error("게시글 목록을 불러오는 데 실패했습니다.", error);
+    //         alert("게시글 불러오기 실패!");
+    //     }
+    // };
+
+    // 컴포넌트가 마운트될 때 fetchPosts 함수를 호출합니다.
+    // useEffect(() => {
+    //     fetchPosts();
+    // }, []); // 빈 배열을 전달하여 컴포넌트가 처음 마운트될 때만 호출되도록 합니다.
 
     return (
         <Wrapper>
@@ -81,19 +105,6 @@ function MainPage(props) {
                             />
                         </>
                     )}
-
-                    {/* <NavigationButton
-                        title="로그인"
-                        onClick={() => {
-                            navigate("/login");
-                        }}
-                    />
-                    <NavigationButton
-                        title="회원가입"
-                        onClick={() => {
-                            navigate("/register");
-                        }}
-                    /> */}
                 </div>
             </Header>
             <Container>
@@ -104,6 +115,10 @@ function MainPage(props) {
                     }}
                 />
                 <PostList
+                    // posts={posts} // 상태로 관리되는 posts 배열을 PostList 컴포넌트에 전달합니다.
+                    // onClickItem={(item) => {
+                    //     navigate(`/post/${item.id}`);
+                    // }}
                     posts={data}
                     onClickItem={(item) => {
                         navigate(`/post/${item.id}`);
