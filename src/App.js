@@ -22,17 +22,15 @@ function App(props) {
     return (
         <BrowserRouter>
             <AuthProvider>
-                <HttpHeadersContext>
-                    <MainTitleText>리액트 게시판</MainTitleText>
-                    <Routes>
-                        <Route index element={<MainPage />} />
-                        <Route path="post-write" element={<PostWritePage />} />
-                        <Route path="post/:postId" element={<PostViewPage />} />
-                        <Route path="login" element={<LoginForm />} />
-                        <Route path="register" element={<RegisterForm />} />
-                        <Route path="logout" element={<Logout />} />
-                    </Routes>
-                </HttpHeadersContext>
+                <MainTitleText>리액트 게시판</MainTitleText>
+                <Routes>
+                    <Route index element={<MainPage />} />
+                    <Route path="post-write" element={<PostWritePage />} />
+                    <Route path="post/:postId" element={<PostViewPage />} />
+                    <Route path="login" element={<LoginForm />} />
+                    <Route path="register" element={<RegisterForm />} />
+                    <Route path="logout" element={<Logout />} />
+                </Routes>
             </AuthProvider>
         </BrowserRouter>
     );

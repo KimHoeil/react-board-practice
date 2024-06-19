@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import CommentList from "../list/CommentList";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
 import data from "../../data.json";
+import axios from "axios";
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -49,12 +50,33 @@ const CommentLabel = styled.p`
 function PostViewPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
+    const [post, setPost] = useState(null); // 게시글 상태를 null로 초기화합니다.
 
-    const post = data.find((item) => {
-        return item.id == postId;
-    });
+    // const post = data.find((item) => {
+    //     return item.id == postId;
+    // });
 
     const [comment, setComment] = useState("");
+
+    // 서버로부터 게시글을 불러오는 함수
+    const fetchPost = async () => {
+        try {
+            const response = await axios.get(`여기에_서버_URL/posts/${postId}`);
+            setPost(response.data); // 서버로부터 받은 데이터로 상태를 업데이트합니다.
+        } catch (error) {
+            console.error("게시글을 불러오는 데 실패했습니다.", error);
+        }
+    };
+
+    // 컴포넌트가 마운트될 때 fetchPost 함수를 호출합니다.
+    useEffect(() => {
+        fetchPost();
+    }, [postId]); // postId가 변경될 때마다 fetchPost 함수를 호출합니다.
+
+    // 게시글이 로드되지 않았을 때 로딩 표시 또는 대체 UI를 제공할 수 있습니다.
+    if (!post) {
+        return <div>로딩 중...</div>;
+    }
 
     return (
         <Wrapper>
