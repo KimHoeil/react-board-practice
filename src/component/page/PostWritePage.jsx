@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import TextInput from "../ui/TextInput";
 import Button from "../ui/Button";
+import axios from "axios"; // axios를 임포트합니다.
 
 const Wrapper = styled.div`
     display: flex;
@@ -56,6 +57,20 @@ function PostWritePage(props) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
 
+    // 서버로 데이터를 전송하는 함수
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post("여기에_서버_URL", {
+                title: title,
+                content: content,
+            });
+            console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
+            navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
+        } catch (error) {
+            console.error("게시글 작성이 실패했습니다.", error);
+        }
+    };
+
     return (
         <Wrapper>
             <StyledForm>
@@ -74,12 +89,7 @@ function PostWritePage(props) {
                         setContent(event.target.value);
                     }}
                 />
-                <SubmitButton
-                    title="글 작성하기"
-                    onClick={() => {
-                        navigate("/");
-                    }}
-                />
+                <SubmitButton title="글 작성하기" onClick={handleSubmit} />
             </StyledForm>
         </Wrapper>
     );
