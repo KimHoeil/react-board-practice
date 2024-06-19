@@ -5,8 +5,8 @@ import styled from "styled-components";
 import axios from "axios";
 import MainPage from "../page/MainPage";
 import { AuthContext } from "../context/AuthProvider";
-import HttpHeadersContext from "../context/HttpHeadersProvider";
 import { useState, useContext } from "react";
+import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
 const FormWrapper = styled.div`
     display: flex;

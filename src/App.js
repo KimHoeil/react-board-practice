@@ -10,6 +10,7 @@ import LoginForm from "./component/form/LoginForm";
 import RegisterForm from "./component/form/RegisterForm";
 import AuthProvider from "./component/context/AuthProvider";
 import Logout from "./component/form/Logout";
+import HttpHeadersProvider from "./component/context/HttpHeadersProvider";
 
 const MainTitleText = styled.p`
     font-size: 24px;
@@ -21,15 +22,17 @@ function App(props) {
     return (
         <BrowserRouter>
             <AuthProvider>
-                <MainTitleText>리액트 게시판</MainTitleText>
-                <Routes>
-                    <Route index element={<MainPage />} />
-                    <Route path="post-write" element={<PostWritePage />} />
-                    <Route path="post/:postId" element={<PostViewPage />} />
-                    <Route path="login" element={<LoginForm />} />
-                    <Route path="register" element={<RegisterForm />} />
-                    <Route path="logout" element={<Logout />} />
-                </Routes>
+                <HttpHeadersProvider>
+                    <MainTitleText>리액트 게시판</MainTitleText>
+                    <Routes>
+                        <Route index element={<MainPage />} />
+                        <Route path="post-write" element={<PostWritePage />} />
+                        <Route path="post/:postId" element={<PostViewPage />} />
+                        <Route path="login" element={<LoginForm />} />
+                        <Route path="register" element={<RegisterForm />} />
+                        <Route path="logout" element={<Logout />} />
+                    </Routes>
+                </HttpHeadersProvider>
             </AuthProvider>
         </BrowserRouter>
     );
