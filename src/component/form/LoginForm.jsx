@@ -76,7 +76,7 @@ function LoginForm() {
 
     const onSubmit = async (data) => {
         await axios
-            .post("http://localhost:8989/user/login", data)
+            .post("http://localhost:8080/user/api/login", data)
             .then((resp) => {
                 console.log("[Login.js] login() success :D");
                 console.log(resp.data);
@@ -101,7 +101,7 @@ function LoginForm() {
         // try {
         //     // 스프링 서버의 로그인 api 엔드포인트로 post 요청을 보낸다.
         //     const response = await axios.get(
-        //         "http://54.180.250.102:8080/api/posts",
+        //         "http://localhost:8080/api/user/login",
         //         data
         //     );
         //     console.log(data);
