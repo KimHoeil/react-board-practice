@@ -66,6 +66,7 @@ function LoginForm() {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm();
 
     const navigate = useNavigate();
@@ -99,6 +100,8 @@ function LoginForm() {
         } catch (error) {
             console.error(error);
             // 에러처리 로직을 여기에 작성한다.
+            alert("이메일 또는 비밀번호가 틀렸습니다.🔐");
+            reset({ email: "", password: "" }); // 이메일과 비밀번호 필드를 빈 문자열로 초기화합니다.
         }
     };
 
