@@ -63,38 +63,24 @@ function PostWritePage(props) {
 
     // 서버로 데이터를 전송하는 함수
     const handleSubmit = async () => {
-        const req = {
-            title: title,
-            content: content,
-        };
-
-        await axios
-            .post("http://localhost:8989/board/write", req, {
-                headers: headers,
-            })
-            .then((resp) => {
-                console.log("[BbsWrite.js] createBbs() success :D");
-                console.log(resp.data);
-
-                alert("새로운 게시글을 성공적으로 등록했습니다 :D");
-                navigate("/");
-            })
-            .catch((err) => {
-                console.log("[BbsWrite.js] createBbs() error :<");
-                console.log(err);
-            });
-
-        // try {
-        //     const response = await axios.post("여기에_서버_URL", {
-        //         title: title,
-        //         content: content,
-        //     });
-        //     console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
-        //     navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
-        // } catch (error) {
-        //     console.error("게시글 작성이 실패했습니다.", error);
-        //     alert("게시글 작성이 실패했습니다.");
-        // }
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/api/post",
+                {
+                    title: title,
+                    contents: content,
+                },
+                {
+                    headers: {
+                        Authorization: localStorage.getItem("access_token"),
+                    },
+                }
+            );
+            console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
+            navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
+        } catch (error) {
+            console.error("게시글 작성이 실패했습니다.", error);
+        }
     };
 
     useEffect(() => {

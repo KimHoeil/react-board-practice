@@ -5,8 +5,8 @@ import styled from "styled-components";
 import axios from "axios";
 import MainPage from "../page/MainPage";
 import { AuthContext } from "../context/AuthProvider";
-import HttpHeadersContext from "../context/HttpHeadersProvider";
 import { useState, useContext } from "react";
+import { HttpHeadersContext } from "../context/HttpHeadersProvider";
 
 const FormWrapper = styled.div`
     display: flex;
@@ -75,54 +75,31 @@ function LoginForm() {
     const { headers, setHeaders } = useContext(HttpHeadersContext);
 
     const onSubmit = async (data) => {
-        await axios
-            .post("http://localhost:8080/user/api/login", data)
-            .then((resp) => {
-                console.log("[Login.js] login() success :D");
-                console.log(resp.data);
+        try {
+            // 스프링 서버의 로그인 api 엔드포인트로 post 요청을 보낸다.
+            const response = await axios
+                .post("http://localhost:8080/api/user/login", data)
+                .then((res) => {
+                    // JWT 토큰 저장
+                    let accessToken = res.headers.authorization;
+                    localStorage.setItem("access_token", accessToken);
+                });
+            console.log(data);
+            //로그인 성공 후의 로직을 여기에 작성한다.
+            alert(data.userEmail + "님, 성공적으로 로그인 되었습니다 🔐");
 
-                alert(resp.data.email + "님, 성공적으로 로그인 되었습니다 🔐");
+            // localStorage.setItem("bbs_access_token", data.token);
+            // localStorage.setItem("id", data.userEmail);
 
-                // JWT 토큰 저장
-                localStorage.setItem("bbs_access_token", resp.data.token);
-                localStorage.setItem("id", resp.data.email);
-
-                setAuth(resp.data.email); // 사용자 인증 정보(아이디 저장)
-                setHeaders({ Authorization: `Bearer ${resp.data.toekn}` }); // 헤더 Authorization 필드 저장
-
-                navigate("/");
-            })
-            .catch((err) => {
-                console.log("[Login.js] login() error :<");
-                console.log(err);
-
-                alert("⚠️ " + err.response.data);
-            });
-        // try {
-        //     // 스프링 서버의 로그인 api 엔드포인트로 post 요청을 보낸다.
-        //     const response = await axios.get(
-        //         "http://localhost:8080/api/user/login",
-        //         data
-        //     );
-        //     console.log(data);
-        //     console.log(response.data);
-        //     //로그인 성공 후의 로직을 여기에 작성한다.
-        //     alert(data.userEmail + "님, 성공적으로 로그인 되었습니다 🔐");
-
-        //     // JWT 토큰 저장
-        //     localStorage.setItem("bbs_access_token", response.data.token);
-        //     localStorage.setItem("id", response.data.userEmail);
-
-        //     setAuth(data.userEmail);
-        //     setHeaders({ Authorization: `Bearer ${response.data.toekn}` }); // 헤더 Authorization 필드 저장
-
-        //     navigate("/");
-        // } catch (error) {
-        //     console.error(error);
-        //     // 에러처리 로직을 여기에 작성한다.
-        //     alert("이메일 또는 비밀번호가 틀렸습니다.🔐");
-        //     reset({ userEmail: "", password: "" }); // 이메일과 비밀번호 필드를 빈 문자열로 초기화합니다.
-        // }
+            setAuth(data.userEmail);
+            navigate("/");
+        } catch (error) {
+            console.error(error);
+            console.log(data);
+            // 에러처리 로직을 여기에 작성한다.
+            alert("이메일 또는 비밀번호가 틀렸습니다.🔐");
+            reset({ userEmail: "", password: "" }); // 이메일과 비밀번호 필드를 빈 문자열로 초기화합니다.
+        }
     };
 
     return (
