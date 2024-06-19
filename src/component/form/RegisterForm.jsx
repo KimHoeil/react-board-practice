@@ -80,101 +80,101 @@ function RegisterForm() {
         handleSubmit,
         watch,
         formState: { errors },
+        reset,
     } = useForm();
 
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [isEmailAvailable, setIsEmailAvailable] = useState(true);
+    const [userEmail, setuserEmail] = useState("");
+    const [isuserEmailAvailable, setIsuserEmailAvailable] = useState(true);
 
     // 이메일 중복 확인 함수
-    const checkEmailAvailability = async (email) => {
-        try {
-            const response = await axios.get(
-                `http://localhost:8080/api/check-email?email=${email}`
-            );
-            setIsEmailAvailable(response.data.isAvailable);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    // const checkuserEmailAvailability = async (userEmail) => {
+    //     try {
+    //         const response = await axios.get(
+    //             `http://localhost:8080/api/check-userEmail?userEmail=${userEmail}`
+    //         );
+    //         setIsuserEmailAvailable(false);
+    //     } catch (error) {
+    //         console.error(error);
+    //         alert("이미 사용 중인 이메일입니다!!!");
+    //         setIsuserEmailAvailable(true);
+    //         reset({
+    //             userEmail: "",
+    //             password: "",
+    //             confirmPassword: "",
+    //         });
+    //     }
+    // };
 
     // 이메일 중복 확인 버튼 클릭 핸들러
-    const handleCheckEmailClick = () => {
-        checkEmailAvailability(email);
-    };
+    // const handleCheckuserEmailClick = () => {
+    //     checkuserEmailAvailability(userEmail);
+    // };
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-        console.log(email);
-    };
+    // const handleuserEmailChange = (event) => {
+    //     setuserEmail(event.target.value);
+    //     console.log(userEmail);
+    // };
+
+    // 이메일 입력 변경 시 중복 확인
+    // const handleEmailChange = (event) => {
+    //     console.log(userEmail);
+    //     const emailValue = event.target.value;
+    //     setuserEmail(emailValue);
+    //     if (emailValue.includes("@")) {
+    //         checkuserEmailAvailability(emailValue);
+    //     }
+    // };
 
     // 비밀번호 확인
     const password = watch("password");
 
-    const onSubmit = (data) => {
-        console.log(data);
-
-        if (data.email == null) {
-            alert("이메일은 필수 입력 사항입니다.");
-            return;
-        }
-
-        // 회원가입 처리 로직을 여기에 작성합니다.
-        if (isEmailAvailable) {
-            // 회원가입 로직
-            alert(`${data.name}님 회원가입을 축하드립니다 🎊`);
+    const onSubmit = async (data) => {
+        try {
+            // 스프링 서버의 회원가입 API 엔드포인트로 POST 요청을 보냅니다.
+            const response = await axios.post(
+                "http://localhost:8080/api/user/signup",
+                data
+            );
+            console.log(data);
+            // 회원가입 성공 후의 로직을 여기에 작성합니다.
+            alert(`${data.userEmail}님 회원가입을 축하드립니다 🎊`);
             navigate("/login");
-        } else {
+        } catch (error) {
+            console.error(data);
+            console.error(error);
+            // 에러 처리 로직을 여기에 작성합니다.
             alert("이미 사용 중인 이메일입니다!");
+            reset({
+                userEmail: "",
+                password: "",
+                confirmPassword: "",
+            });
         }
     };
-
-    // const onSubmit = async (data) => {
-    //     try {
-    //         // 스프링 서버의 회원가입 API 엔드포인트로 POST 요청을 보냅니다.
-    //         const response = await axios.post(
-    //             "http://localhost:8080/api/register",
-    //             data
-    //         );
-    //         console.log(response.data);
-    //         // 회원가입 성공 후의 로직을 여기에 작성합니다.
-    //     } catch (error) {
-    //         console.error(error);
-    //         // 에러 처리 로직을 여기에 작성합니다.
-    //     }
-    // };
 
     return (
         <FormWrapper>
             <StyledForm onSubmit={handleSubmit(onSubmit)}>
                 <Title>회원가입</Title>
+                <FormField></FormField>
                 <FormField>
-                    <Label htmlFor="name">이름</Label>
-                    <Input
-                        id="name"
-                        {...register("name", {
-                            required: "이름은 필수 입력 사항입니다.",
-                        })}
-                    />
-                    {errors.name && <p>{errors.name.message}</p>}
-                </FormField>
-                <FormField>
-                    <Label htmlFor="email">이메일</Label>
+                    <Label htmlFor="userEmail">이메일</Label>
                     <div style={{ display: "flex", alignItems: "center" }}>
                         <Input
-                            id="email"
+                            id="userEmail"
                             // onChange={handleEmailChange}
-                            {...register("email", {
+                            {...register("userEmail", {
                                 required: "이메일은 필수 입력 사항입니다.",
                             })}
                         />
-                        &nbsp; &nbsp;
-                        <button onClick={handleCheckEmailClick}>
+                        {/* &nbsp; &nbsp;
+                        <button onClick={handleCheckuserEmailClick}>
                             중복 확인
-                        </button>
+                        </button> */}
                     </div>
-                    {errors.email && <p>{errors.email.message}</p>}
-                    {!isEmailAvailable && (
+                    {errors.userEmail && <p>{errors.userEmail.message}</p>}
+                    {!isuserEmailAvailable && (
                         <p>이미 사용 중인 이메일입니다.</p>
                     )}{" "}
                 </FormField>

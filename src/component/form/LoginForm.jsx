@@ -72,14 +72,6 @@ function LoginForm() {
     const navigate = useNavigate();
     const { auth, setAuth } = useContext(AuthContext);
 
-    // const onSubmit = (data) => {
-    //     console.log(data);
-    //     // 로그인 처리 로직을 여기에 작성합니다.
-    //     setAuth(data.userEmail);
-    //     // setUsername(data.userEmail);
-    //     navigate("/");
-    // };
-
     const onSubmit = async (data) => {
         try {
             // 스프링 서버의 로그인 api 엔드포인트로 post 요청을 보낸다.
@@ -92,8 +84,8 @@ function LoginForm() {
             alert(data.userEmail + "님, 성공적으로 로그인 되었습니다 🔐");
 
             // JWT 토큰 저장
-            localStorage.setItem("bbs_access_token", response.data.token);
-            localStorage.setItem("id", response.data.userEmail);
+            localStorage.setItem("bbs_access_token", data.token);
+            localStorage.setItem("id", data.userEmail);
 
             setAuth(data.userEmail);
             navigate("/");
