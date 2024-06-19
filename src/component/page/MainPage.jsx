@@ -1,4 +1,4 @@
-import React, { Children, createContext, useContext, useState } from "react";
+import React, { Children, createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PostList from "../list/PostList";
@@ -7,6 +7,8 @@ import data from "../../data.json";
 import Toolbar from "../Toolbar";
 import AuthProvider from "../context/AuthProvider";
 import { AuthContext } from "../context/AuthProvider";
+import axios from "axios";
+
 
 const Wrapper = styled.div`
     padding: 16px;
@@ -55,8 +57,10 @@ function MainPage(props) {
     // 서버로부터 게시글 목록을 불러오는 함수
     const fetchPosts = async () => {
         try {
-            const response = await axios.get("여기에_서버_URL");
-            setPosts(response.data); // 서버로부터 받은 데이터로 상태를 업데이트합니다.
+            const response = await axios.get("http://localhost:8080/api/posts");
+            setPosts(response.data.response); // 서버로부터 받은 데이터로 상태를 업데이트합니다.
+            console.log(response.data.response)
+            // console.log("찍히나?")
         } catch (error) {
             console.error("게시글 목록을 불러오는 데 실패했습니다.", error);
             alert("게시글 불러오기 실패!");
@@ -126,6 +130,7 @@ function MainPage(props) {
                     onClickItem={(item) => {
                         navigate(`/post/${item.id}`);
                     }}
+ 
                     // posts={data}
                     // onClickItem={(item) => {
                     //     navigate(`/post/${item.id}`);

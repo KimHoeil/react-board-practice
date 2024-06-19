@@ -60,10 +60,10 @@ function PostWritePage(props) {
     // 서버로 데이터를 전송하는 함수
     const handleSubmit = async () => {
         try {
-            const response = await axios.post("여기에_서버_URL", {
+            const response = await axios.post("http://localhost:8080/api/post", {
                 title: title,
-                content: content,
-            });
+                contents: content,
+            },{headers:{"Authorization":localStorage.getItem('access_token')}});
             console.log(response.data); // 응답 데이터를 콘솔에 출력합니다.
             navigate("/"); // 게시글 작성 후 홈으로 이동합니다.
         } catch (error) {

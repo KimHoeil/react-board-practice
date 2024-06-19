@@ -78,7 +78,11 @@ function LoginForm() {
             const response = await axios.post(
                 "http://localhost:8080/api/user/login",
                 data
-            );
+            ).then((res)=>{
+                let accessToken = res.headers.authorization;
+                localStorage.setItem('access_token',accessToken);
+                // axios.defaults.headers.common['Authorization'] = `${accessToken}`;
+            });
             console.log(data);
             //로그인 성공 후의 로직을 여기에 작성한다.
             alert(data.userEmail + "님, 성공적으로 로그인 되었습니다 🔐");

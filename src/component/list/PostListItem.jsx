@@ -33,7 +33,7 @@ function PostListItem(props) {
 
     return (
         <Wrapper onClick={onClick}>
-            <AuthorText>{post.userEmail}</AuthorText>
+            <AuthorText>작성자: {post.userEmail}</AuthorText>
             <TitleText>{post.title}</TitleText>
         </Wrapper>
     );
