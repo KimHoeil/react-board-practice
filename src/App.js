@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import styled from "styled-components";
+// Pages
+import MainPage from "./component/page/MainPage";
+import PostWritePage from "./component/page/PostWritePage";
+import PostViewPage from "./component/page/PostViewPage";
+// import Login from "./component/page/LoginPage";
+import LoginForm from "./component/form/LoginForm";
+import RegisterForm from "./component/form/RegisterForm";
+import AuthProvider from "./component/context/AuthProvider";
+import Logout from "./component/form/Logout";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const MainTitleText = styled.p`
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+`;
+
+function App(props) {
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <MainTitleText>리액트 게시판</MainTitleText>
+                <Routes>
+                    <Route index element={<MainPage />} />
+                    <Route path="post-write" element={<PostWritePage />} />
+                    <Route path="post/:postId" element={<PostViewPage />} />
+                    <Route path="login" element={<LoginForm />} />
+                    <Route path="register" element={<RegisterForm />} />
+                    <Route path="logout" element={<Logout />} />
+                </Routes>
+            </AuthProvider>
+        </BrowserRouter>
+    );
 }
 
 export default App;
